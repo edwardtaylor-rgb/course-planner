@@ -1,0 +1,9 @@
+{
+  "name": "language-course-planner",
+  "version": "1.0.0",
+  "description": "AI-powered language course programme generator",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}
