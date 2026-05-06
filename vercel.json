@@ -1,11 +1,5 @@
 {
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" }
-  ],
-  "functions": {
-    "api/generate.mjs": {
-      "memory": 512,
-      "maxDuration": 30
-    }
-  }
+  ]
 }
