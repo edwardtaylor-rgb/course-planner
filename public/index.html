@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Language Course Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F7F4EE;
+    --ink: #1A1810;
+    --ink-muted: #6B6860;
+    --ink-faint: #B0ADA6;
+    --accent: #2D5F3F;
+    --accent-light: #EAF2ED;
+    --accent-mid: #4A8C62;
+    --warm: #C4571A;
+    --warm-light: #FAF0E8;
+    --card-bg: #FFFFFF;
+    --border: rgba(26,24,16,0.10);
+    --border-strong: rgba(26,24,16,0.22);
+    --shadow: 0 2px 12px rgba(26,24,16,0.07);
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    border: 1px solid rgba(247,244,238,0.07);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 40%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1px solid rgba(247,244,238,0.05);
+  }
+  .header-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-mid);
+    background: rgba(74,140,98,0.15);
+    border: 1px solid rgba(74,140,98,0.3);
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 0.75rem;
+  }
+  header h1 em { font-style: italic; color: var(--accent-mid); }
+  header p {
+    font-size: 15px;
+    color: rgba(247,244,238,0.6);
+    max-width: 520px;
+    font-weight: 300;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+  }
+  .form-card h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+  @media (max-width: 580px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  input[type=number], select {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(45,95,63,0.12);
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .type-toggle { display: flex; gap: 6px; }
+  .type-btn {
+    flex: 1;
+    padding: 10px 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--cream);
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .type-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .type-btn.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 500; }
+
+  .generate-btn {
+    width: 100%;
+    padding: 14px;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-style: italic;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-top: 0.5rem;
+  }
+  .generate-btn:hover { background: #2e2c22; }
+  .generate-btn:active { transform: scale(0.99); }
+  .generate-btn:disabled { background: var(--ink-faint); cursor: not-allowed; transform: none; }
+
+  .progress-wrap { margin-bottom: 2rem; display: none; }
+  .progress-wrap.active { display: block; }
+  .progress-label { font-size: 13px; color: var(--ink-muted); margin-bottom: 8px; }
+  .progress-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-mid)); border-radius: 2px; width: 0%; animation: prog 16s ease-out forwards; }
+  @keyframes prog { 0%{width:0%} 75%{width:80%} 100%{width:88%} }
+
+  .error-box {
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    font-size: 14px;
+    color: #991B1B;
+    margin-bottom: 1.5rem;
+    display: none;
+  }
+  .error-box.show { display: block; }
+
+  #output { display: none; }
+  #output.show { display: block; }
+
+  .output-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+  .output-title { font-family: var(--font-display); font-size: 1.6rem; font-weight: 400; color: var(--ink); }
+  .output-title em { font-style: italic; color: var(--accent); }
+
+  .meta-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  .pill { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 100px; background: var(--accent-light); color: var(--accent); border: 1px solid rgba(45,95,63,0.2); }
+
+  .dl-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 18px; font-size: 13px; font-weight: 500;
+    border: 1px solid var(--border-strong); border-radius: var(--radius);
+    background: var(--card-bg); color: var(--ink); cursor: pointer; transition: background 0.15s;
+  }
+  .dl-btn:hover { background: var(--cream); }
+
+  .module-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 1.25rem;
+    box-shadow: var(--shadow); opacity: 0; transform: translateY(16px);
+    animation: fadeUp 0.4s ease forwards;
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: none; } }
+
+  .module-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+  .module-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--cream); font-family: var(--font-display); font-size: 0.9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .module-info { flex: 1; }
+  .module-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 400; color: var(--ink); margin-bottom: 2px; }
+  .module-theme { font-size: 12px; color: var(--ink-muted); display: flex; align-items: center; gap: 5px; }
+  .theme-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .module-hrs { font-size: 12px; font-weight: 500; color: var(--accent); background: var(--accent-light); padding: 4px 10px; border-radius: 100px; white-space: nowrap; }
+
+  .components { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .comp { background: var(--cream); border-radius: var(--radius); padding: 12px 14px; }
+  .comp-head { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 8px; }
+  .comp ul { list-style: none; }
+  .comp ul li { font-size: 13px; color: var(--ink); padding: 4px 0; border-bottom: 1px solid var(--border); line-height: 1.4; }
+  .comp ul li:last-child { border-bottom: none; }
+  .comp.reading .comp-head { color: #1d4ed8; }
+  .comp.listening .comp-head { color: #7e22ce; }
+  .comp.grammar .comp-head { color: var(--warm); }
+  .comp.vocabulary .comp-head { color: var(--accent); }
+  .comp.functional .comp-head { color: #0369a1; }
+  .comp.pronunciation .comp-head { color: #9f1239; }
+
+  footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--ink-faint); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-tag">AI-Powered Curriculum Tool</div>
+    <h1>Language Course <em>Planner</em></h1>
+    <p>Generate structured adult language programmes with modules, themes, and learning activities — in seconds.</p>
+  </div>
+</header>
+
+<main>
+  <div class="form-card">
+    <h2>Course configuration</h2>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="language">Target language</label>
+        <select id="language">
+          <option value="English">English</option>
+          <option value="Spanish">Spanish</option>
+          <option value="French">French</option>
+          <option value="German">German</option>
+          <option value="Italian">Italian</option>
+          <option value="Portuguese">Portuguese</option>
+          <option value="Mandarin Chinese">Mandarin Chinese</option>
+          <option value="Japanese">Japanese</option>
+          <option value="Arabic">Arabic</option>
+          <option value="Dutch">Dutch</option>
+          <option value="Russian">Russian</option>
+          <option value="Korean">Korean</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="cefr">CEFR level</label>
+        <select id="cefr">
+          <option value="A1">A1 — Beginner</option>
+          <option value="A2">A2 — Elementary</option>
+          <option value="B1" selected>B1 — Intermediate</option>
+          <option value="B2">B2 — Upper Intermediate</option>
+          <option value="C1">C1 — Advanced</option>
+          <option value="C2">C2 — Proficiency</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="hours">Course duration (hours)</label>
+        <input type="number" id="hours" value="40" min="5" max="300" step="5" />
+      </div>
+      <div class="form-group">
+        <label>Course type</label>
+        <div class="type-toggle">
+          <button class="type-btn active" data-val="group" onclick="setType(this)">Group</button>
+          <button class="type-btn" data-val="individual" onclick="setType(this)">Individual</button>
+          <button class="type-btn" data-val="blended" onclick="setType(this)">Blended</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="generate-btn" onclick="generate()" id="genBtn">Generate programme →</button>
+  </div>
+
+  <div class="error-box" id="errBox"></div>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">Generating your programme…</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div id="output">
+    <div class="output-header">
+      <div class="output-title" id="outputTitle"></div>
+      <button class="dl-btn" onclick="download()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .txt
+      </button>
+    </div>
+    <div class="meta-pills" id="metaPills"></div>
+    <div id="moduleList"></div>
+  </div>
+</main>
+
+<footer>Language Course Planner · Powered by Claude AI</footer>
+
+<script>
+  let courseType = 'group';
+  let downloadText = '';
+
+  function setType(el) {
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    courseType = el.dataset.val;
+  }
+
+  async function generate() {
+    const lang  = document.getElementById('language').value;
+    const cefr  = document.getElementById('cefr').value;
+    const hours = parseInt(document.getElementById('hours').value);
+    const btn   = document.getElementById('genBtn');
+    const errBox = document.getElementById('errBox');
+    const progressWrap = document.getElementById('progressWrap');
+    const output = document.getElementById('output');
+    const fill  = document.getElementById('progressFill');
+
+    errBox.classList.remove('show');
+    output.classList.remove('show');
+
+    if (!hours || hours < 5) {
+      errBox.textContent = 'Please enter a course duration of at least 5 hours.';
+      errBox.classList.add('show');
+      return;
+    }
+
+    btn.disabled = true;
+    progressWrap.classList.add('active');
+    fill.style.animation = 'none';
+    void fill.offsetWidth;
+    fill.style.animation = 'prog 16s ease-out forwards';
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language: lang, cefr, hours, courseType })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Server error ${res.status}`);
+      }
+
+      const data = await res.json();
+      renderOutput(data.modules, lang, cefr, hours);
+    } catch(e) {
+      errBox.textContent = 'Error: ' + (e.message || 'Something went wrong. Please try again.');
+      errBox.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      progressWrap.classList.remove('active');
+    }
+  }
+
+  function renderOutput(modules, lang, cefr, hours) {
+    document.getElementById('outputTitle').innerHTML = `<em>${lang}</em> Course Programme`;
+    document.getElementById('metaPills').innerHTML = [
+      `<span class="pill">CEFR ${cefr}</span>`,
+      `<span class="pill">${hours} hours total</span>`,
+      `<span class="pill">${modules.length} modules</span>`,
+      `<span class="pill">${courseType}</span>`
+    ].join('');
+
+    const list = document.getElementById('moduleList');
+    list.innerHTML = '';
+    modules.forEach((mod, i) => {
+      const card = document.createElement('div');
+      card.className = 'module-card';
+      card.style.animationDelay = `${i * 0.06}s`;
+      card.innerHTML = `
+        <div class="module-head">
+          <div class="module-num">${mod.number || i+1}</div>
+          <div class="module-info">
+            <div class="module-title">${mod.title}</div>
+            <div class="module-theme"><span class="theme-dot"></span>${mod.theme}</div>
+          </div>
+          <div class="module-hrs">${mod.hours}h</div>
+        </div>
+        <div class="components">
+          ${comp('reading','📖','Reading', mod.reading)}
+          ${comp('listening','🎧','Listening', mod.listening)}
+          ${comp('grammar','✏️','Grammar', mod.grammar)}
+          ${comp('vocabulary','🗂️','Vocabulary', mod.vocabulary)}
+          ${comp('functional','💬','Functional language', mod.functional)}
+          ${comp('pronunciation','🔊','Pronunciation', mod.pronunciation)}
+        </div>`;
+      list.appendChild(card);
+    });
+
+    downloadText = buildDownload(modules, lang, cefr, hours, courseType);
+    document.getElementById('output').classList.add('show');
+    document.getElementById('output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function comp(cls, icon, label, items) {
+    if (!items || !items.length) return '';
+    return `<div class="comp ${cls}"><div class="comp-head"><span>${icon}</span>${label}</div><ul>${items.map(it=>`<li>${it}</li>`).join('')}</ul></div>`;
+  }
+
+  function buildDownload(modules, lang, cefr, hours, type) {
+    let t = `LANGUAGE COURSE PROGRAMME\nLanguage: ${lang}  |  CEFR: ${cefr}  |  Duration: ${hours}h  |  Type: ${type}\n${'═'.repeat(60)}\n\n`;
+    modules.forEach((mod, i) => {
+      t += `MODULE ${mod.number||i+1}: ${mod.title.toUpperCase()}\nTheme: ${mod.theme}  |  Hours: ${mod.hours}h\n${'─'.repeat(50)}\n`;
+      t += `Reading:\n${(mod.reading||[]).map(r=>'  · '+r).join('\n')}\n\nListening:\n${(mod.listening||[]).map(r=>'  · '+r).join('\n')}\n\n`;
+      t += `Grammar:\n${(mod.grammar||[]).map(r=>'  · '+r).join('\n')}\n\nVocabulary:\n${(mod.vocabulary||[]).map(r=>'  · '+r).join('\n')}\n\n`;
+      t += `Functional Language:\n${(mod.functional||[]).map(r=>'  · '+r).join('\n')}\n\nPronunciation:\n${(mod.pronunciation||[]).map(r=>'  · '+r).join('\n')}\n\n`;
+    });
+    return t;
+  }
+
+  function download() {
+    const blob = new Blob([downloadText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'course-programme.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
